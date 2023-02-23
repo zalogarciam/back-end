@@ -16,6 +16,17 @@ def kwargs_function(**kwargs):
 kwargs_function(first='Hello', mid='my', last='World')
 
 def div(a, b):
-    return a/b
+    
+    try:
+        r = a/b
+        return r
+    except ZeroDivisionError: 
+        return "Cannot divide by zero"
+    except TypeError: 
+        return "Please use numbers"
+    except:
+        return "Error"
 
 print(div(10, 2))
+print(div(10, 3))
+ 
