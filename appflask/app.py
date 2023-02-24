@@ -61,7 +61,8 @@ def form_data():
 
 @app.route("/files", methods=['POST'])
 def files():
-    print(request.files)
+    f = request.files['txt'].read().decode('utf-8')
+    print(f)
     return "File received successfully"
 
 app.run(debug=True)
