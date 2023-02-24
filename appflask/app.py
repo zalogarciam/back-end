@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, request
 
 app = Flask(__name__)
 
@@ -30,22 +30,27 @@ student_list = [
             'name':'Gustavo',
             'age': 35,
             'grade': 20
-            },
-             {
-            'name':'Carmen',
-            'age': 30,
-            'grade': 20
-            },
-        ]
+            }
+            ]
 
-@app.route("/students")
+@app.route("/students", methods=['GET','POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'])
 def students():
-    return student_list
+    print(request.method)
+    if request.method == 'GET':
+        return student_list
+    elif request.method == 'POST':
+        print(request.json)
+        student_list.append(request.json)
+        return student_list
 
 @app.route("/student/<name>")
 def search_student(name):
     student =  [x for x in student_list if x['name'] == name]
     if len(student) == 0: return 'Not found'
     return student
+
+@app.route("/html")
+def html():
+    return "<button> Click me </button>"
 
 app.run(debug=True)
