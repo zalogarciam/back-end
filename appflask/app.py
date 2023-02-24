@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, render_template
 
 app = Flask(__name__)
 
@@ -51,6 +51,17 @@ def search_student(name):
 
 @app.route("/html")
 def html():
-    return "<button> Click me </button>"
+    # return "<button> Click me </button>"
+    return render_template("index.html")
+
+@app.route("/form-data", methods=['POST'])
+def form_data():
+    print(request.form)
+    return 'Form data received'
+
+@app.route("/files", methods=['POST'])
+def files():
+    print(request.files)
+    return "File received successfully"
 
 app.run(debug=True)
