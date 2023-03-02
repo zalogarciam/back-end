@@ -1,4 +1,5 @@
 from flask import Flask, request
+from psycopg2 import connect
 
 app = Flask(__name__)
 
@@ -11,6 +12,11 @@ def students():
     if request.method == 'POST':
         return  {'message': 'POST'}
     elif request.method == 'GET':
+        con = connect(host='localhost', database='alumnos', user='postgres', password='scrappy')
+        cursor = con.cursor()
+        cursor.execute('SELECT * FROM alumnos;')
+        res = cursor.fetchall()
+        print(res)
         return {'message': 'GET'}
 
 if __name__ == '__main__':
