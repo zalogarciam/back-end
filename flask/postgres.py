@@ -68,8 +68,11 @@ def student(id):
         }
         else:
             cursor = con.cursor()
-            cursor.execute(f"UPDATE alumnos SET nombre = {data.get('name')}, apellido = {data.get('last_name')}, sexo = {data.get('sex')}, matriculado = {data.get('enrolled')} where id = {id}")
+            cursor.execute(f"UPDATE alumnos SET nombre = '{data.get('name')}', apellido = '{data.get('last_name')}', sexo = '{data.get('sex')}', matriculado = {data.get('enrolled')} where id = {id}")
             con.commit()
+            return {
+                'message': 'Student updated successfully'
+            }
 
     elif request.method == 'DELETE':
         cursor = con.cursor()
@@ -81,8 +84,13 @@ def student(id):
             }
         else:
             cursor = con.cursor()
+            cursor.execute(f"DELETE FROM alumnos_cursos where alumno_id = {id}")
+            cursor.execute(f"DELETE FROM direcciones where alumno_id = {id}")
             cursor.execute(f"DELETE FROM alumnos where id = {id}")
             con.commit()
+            return {
+                'message': 'Student removed successfully',
+            }
 
 if __name__ == '__main__':
     app.run(debug=True)
