@@ -1,7 +1,8 @@
 from flask import Flask, request
 from psycopg2 import connect
-
+from flask_cors import CORS
 app = Flask(__name__)
+CORS(app, CORS_METHODS = ['GET', 'POST', 'DELETE', 'PUT'], origins = ['http://localhost:5500', 'http://127.0.0.1:5500'])
 con = connect(host='localhost', database='alumnos', user='postgres', password='scrappy')
 
 @app.route('/', methods = ['GET'])
@@ -57,10 +58,31 @@ def student(id):
         }}
     
     elif request.method == 'PUT':
-        pass
+        data = request.json
+        cursor = con.cursor()
+        cursor.execute(f"SELECT * FROM alumnos where id = {id}")
+        student = cursor.fetchone()
+        if student is None:
+            return {
+            'message': 'Student not found',
+        }
+        else:
+            cursor = con.cursor()
+            cursor.execute(f"UPDATE alumnos SET nombre = {data.get('name')}, apellido = {data.get('last_name')}, sexo = {data.get('sex')}, matriculado = {data.get('enrolled')} where id = {id}")
+            con.commit()
 
     elif request.method == 'DELETE':
-        pass
+        cursor = con.cursor()
+        cursor.execute(f"SELECT * FROM alumnos where id = {id}")
+        student = cursor.fetchone()
+        if student is None:
+            return {
+            'message': 'Student not found',
+            }
+        else:
+            cursor = con.cursor()
+            cursor.execute(f"DELETE FROM alumnos where id = {id}")
+            con.commit()
 
 if __name__ == '__main__':
     app.run(debug=True)
