@@ -47,7 +47,20 @@ def student(id):
             return {
             'message': 'Student not found',
         }
-        return {'message': student}
+        return {'message': {
+            'id': student[0],
+                'name': student[1],
+                'last_name': student[2],
+                'sex': student[3],
+                'date': student[4],
+                'enrolled': student[5],
+        }}
+    
+    elif request.method == 'PUT':
+        pass
+
+    elif request.method == 'DELETE':
+        pass
 
 if __name__ == '__main__':
     app.run(debug=True)
