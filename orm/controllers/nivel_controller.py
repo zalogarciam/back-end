@@ -21,3 +21,14 @@ class NivelController(Resource):
         return {
             'content': niveles
         }
+
+    def post(self):
+        data = request.json
+        nivel = Nivel(numero = data.get('numero'), descripcion = data.get('descripcion'))
+        conn.session.add(nivel)
+        conn.session.commit()
+
+        return {
+            'message': 'Nivel created successfully'
+        }
+                                                                          
