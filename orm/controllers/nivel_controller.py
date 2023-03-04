@@ -48,4 +48,13 @@ class NivelController(Resource):
             'content': error.args
         }
 
-                                                                          
+class UnNivelController(Resource):
+    def get(self, id):
+        query: Nivel = conn.session.query(Nivel)
+        nivel = query.filter_by(id = id).first()
+        
+        dto = NivelDto()
+        result = dto.dump(nivel)
+        return {
+            'message': result
+        }
