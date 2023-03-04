@@ -29,11 +29,23 @@ class NivelController(Resource):
 
     def post(self):
         data = request.json
-        nivel = Nivel(numero = data.get('numero'), descripcion = data.get('descripcion'))
-        conn.session.add(nivel)
-        conn.session.commit()
-
-        return {
+        # nivel = Nivel(numero = data.get('numero'), descripcion = data.get('descripcion'))
+        # conn.session.add(nivel)
+        # conn.session.commit()
+        try:
+            dto = NivelDto()
+            validated_data = dto.load(data)
+            print(validated_data)
+            nivel = Nivel(numero = data.get('numero'), descripcion = data.get('descripcion'))
+            conn.session.add(nivel)
+            conn.session.commit()
+            return {
             'message': 'Nivel created successfully'
         }
+        except Exception as error:
+            return {
+            'message': 'Error',
+            'content': error.args
+        }
+
                                                                           
