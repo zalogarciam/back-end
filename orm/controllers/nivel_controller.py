@@ -53,6 +53,10 @@ class UnNivelController(Resource):
         query: Nivel = conn.session.query(Nivel)
         nivel = query.filter_by(id = id).first()
         
+        if nivel == None:
+            return {
+                'message': "Nivel not found"
+            }    
         dto = NivelDto()
         result = dto.dump(nivel)
         return {
