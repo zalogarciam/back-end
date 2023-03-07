@@ -9,6 +9,7 @@ from models.nivel_model import Nivel
 from models.maestro_model import Maestro
 from models.seccion_model import Seccion
 from controllers.nivel_controller import NivelController, UnNivelController
+from controllers.maestro_controller import MaestroController
 
 load_dotenv() 
 
@@ -27,6 +28,7 @@ Migrate(app=app, db=conn)
 # defino las rutas de mi API
 flask_api.add_resource(NivelController, '/nivel')
 flask_api.add_resource(UnNivelController, '/nivel/<id>')
+flask_api.add_resource(MaestroController, '/maestro/')
 
 if __name__ == '__main__':
     app.run(debug=True)
