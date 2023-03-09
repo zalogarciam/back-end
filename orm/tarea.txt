@@ -1,0 +1,131 @@
+# TODO: Recibir la informacion del body y el id por la url y modificar la data del alumno, primero validar si el alumno existe, si no existe no hacer ninguna modificacion, si existe hacer la modificacion
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+elif request.method == 'PUT':
+        data = request.json
+        cursor = con.cursor()
+        cursor.execute(f"SELECT * FROM alumnos where id = {id}")
+        student = cursor.fetchone()
+        if student is None:
+            return {
+            'message': 'Student not found',
+        }
+        else:
+            cursor = con.cursor()
+            cursor.execute(f"UPDATE alumnos SET nombre = '{data.get('name')}', apellido = '{data.get('last_name')}', sexo = '{data.get('sex')}', matriculado = {data.get('enrolled')} where id = {id}")
+            con.commit()
+            return {
+                'message': 'Student updated successfully'
+            }
+
+
+
+# TODO: Recibir el id por la url y validar si el alumno existe, si existe, eliminarlo (hacer un delete) caso contrario indicar que el alumno no existe
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+elif request.method == 'DELETE':
+        cursor = con.cursor()
+        cursor.execute(f"SELECT * FROM alumnos where id = {id}")
+        student = cursor.fetchone()
+        if student is None:
+            return {
+            'message': 'Student not found',
+            }
+        else:
+            cursor = con.cursor()
+            cursor.execute(f"DELETE FROM alumnos_cursos where alumno_id = {id}")
+            cursor.execute(f"DELETE FROM direcciones where alumno_id = {id}")
+            cursor.execute(f"DELETE FROM alumnos where id = {id}")
+            con.commit()
+            return {
+                'message': 'Student removed successfully',
+            }
+
+
+# TODO: Implementar para crear y listar a todos los maestros, utilizar o crear los DTOS correspondientes de los maestros
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
+from models.maestro_model import Maestro
+
+class MaestroDto(SQLAlchemyAutoSchema): 
+    class Meta:
+       model = Maestro 
+
+
+=============================================================================
+
+from bd import conn
+from sqlalchemy import Column, types
+
+class Maestro(conn.Model):
+    id = Column(type_= types.Integer, autoincrement=True, primary_key=True)
+    nombre = Column(type_=types.Text, nullable=False)
+    apellidos = Column( type_=types.Text)
+    correo = Column(type_= types.Text, unique=True, nullable=False)
+    direccion = Column(type_=types.Text)
+
+    __tablename__ = 'maestros'
+
+
+=============================================================================
+
+
+from flask_restful import Resource, request
+from sqlalchemy.orm import Query
+from bd import conn
+from models.maestro_model import Maestro
+from dtos.maestro_dto import MaestroDto
+
+class MaestroController(Resource):
+    def get(self):
+        query: Query = conn.session.query(Maestro)
+        resultado = query.all()
+        dto = MaestroDto()
+        maestros = dto.dump(resultado, many = True)
+        return {
+            'content': maestros
+        }
+
+    def post(self):
+        data = request.json
+        try:
+            dto = MaestroDto()
+            validated_data = dto.load(data)
+            maestro = Maestro(nombre = data.get('nombre'), 
+                            apellidos = data.get('apellidos'), 
+                            correo = data.get('correo'), 
+                            direccion = data.get('direccion'))
+            conn.session.add(maestro)
+            conn.session.commit()
+            return {
+            'message': 'Maestro created successfully'
+        }
+        except Exception as error:
+            return {
+            'message': 'Error',
+            'content': error.args
+        }
+
+
+# TODO: Implementar si no existe ese nivel, retornar un message diciendo que el nivel no existe
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+class UnNivelController(Resource):
+    def get(self, id):
+        query: Nivel = conn.session.query(Nivel)
+        nivel = query.filter_by(id = id).first()
+        
+        if nivel == None:
+            return {
+                'message': "Nivel not found"
+            }    
+        dto = NivelDto()
+        result = dto.dump(nivel)
+        return {
+            'message': result
+        }
+
+
+
+# https://github.com/zalogarciam/back-end/tree/week-03/orm
