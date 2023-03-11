@@ -3,7 +3,7 @@ from flask_migrate import Migrate
 from bd import connection
 from dotenv import load_dotenv
 from os import environ
-from controllers.usuario_controller import UsuariosController
+from controllers.usuario_controller import LoginController, UsuariosController
 from flask_restful import Api
 
 load_dotenv() 
@@ -17,6 +17,7 @@ connection.init_app(app)
 Migrate(app = app, db = connection)
 
 api.add_resource(UsuariosController, '/registro')
+api.add_resource(LoginController, '/login')
 
 if __name__ == '__main__':
     app.run(debug=True)

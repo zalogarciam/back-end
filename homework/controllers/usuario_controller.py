@@ -43,7 +43,7 @@ class LoginController(Resource):
             user_found: Usuario | None = query.filter_by(correo = data_validated.get('correo')).first()
             if not user_found:
                 return {
-                    'message': 'User exists'
+                    'message': 'User does not exist'
                 }
             
             hashed_password = bytes(user_found.password, 'utf-8')
