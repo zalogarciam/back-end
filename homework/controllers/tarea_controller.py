@@ -9,6 +9,19 @@ class TareasController(Resource):
     def post(self):
         user_id = get_jwt_identity()
         data = request.json
-
+        dto = TareaDto()
+        try:
+            data_validated = dto.load(data)
+            tarea = Tarea(**data_validated, usuarioId = user_id)
+            connection.session.add(tarea)
+            connection.session.commit()
+            return {
+                'message': 'Added successfully'
+            }, 201
+        except Exception as error:
+            return {
+                'message': 'Error to create tarea',
+                'content': error.args
+            }
     def get(self):
         pass

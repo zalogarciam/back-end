@@ -5,6 +5,7 @@ from bd import connection
 from dotenv import load_dotenv
 from os import environ
 from controllers.usuario_controller import LoginController, PerfilController, UsuariosController
+from controllers.tarea_controller import TareasController
 from flask_restful import Api
 from flask_jwt_extended import JWTManager
 load_dotenv() 
@@ -23,6 +24,7 @@ JWTManager(app)
 api.add_resource(UsuariosController, '/registro')
 api.add_resource(LoginController, '/login')
 api.add_resource(PerfilController, '/perfil')
+api.add_resource(TareasController, '/ptareaserfil')
 
 if __name__ == '__main__':
     app.run(debug=True)
