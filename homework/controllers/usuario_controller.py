@@ -1,7 +1,7 @@
 from flask_restful import Resource, request
 from dtos.usuario_dto import LoginDto, UsuarioDto
 from models.usuario_model import Usuario
-from flask_jwt_extended import create_access_token
+from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 from sqlalchemy.orm import Query
 from bcrypt import checkpw, hashpw, gensalt
 from bd import connection
@@ -67,7 +67,14 @@ class LoginController(Resource):
             }
         
 class PerfilController(Resource):
+    @jwt_required()
     def get(self):
+         id = get_jwt_identity()
+         query: Query = connection.session.query(Usuario)
+         user_found: Usuario | None = query.filter_by(id = id).first()
+         dto = UsuarioDto()
+         data = dto.dump(user_found)
+
          return {
-                'message': 'Hello',
+                'content': data,
             }
