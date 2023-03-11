@@ -1,7 +1,8 @@
 from flask_restful import Resource, request
-from dtos.usuario_dto import UsuarioDto
+from dtos.usuario_dto import LoginDto, UsuarioDto
 from models.usuario_model import Usuario
-from bcrypt import hashpw, gensalt
+from sqlalchemy.orm import Query
+from bcrypt import checkpw, hashpw, gensalt
 from bd import connection
 
 class UsuariosController(Resource):
@@ -29,5 +30,36 @@ class UsuariosController(Resource):
         except Exception as error:
             return {
                 'message': 'Error al ingresar el usuario',
+                'content': error.args
+            }
+        
+class LoginController(Resource):
+    def post(self):
+        data = request.json
+        dto = LoginDto()
+        try:
+            data_validated = dto.load(data)
+            query: Query = connection.session.query(Usuario)
+            user_found: Usuario | None = query.filter_by(correo = data_validated.get('correo')).first()
+            if not user_found:
+                return {
+                    'message': 'User exists'
+                }
+            
+            hashed_password = bytes(user_found.password, 'utf-8')
+            password = bytes(data_validated.get('password'), 'utf-8')
+            result = checkpw(password, hashed_password)
+            if result:
+                return {
+                    'message': "Access granted"
+                }
+            else:
+                return{
+                    'message': "Access denied"
+                }
+
+        except Exception as error:
+            return {
+                'message': 'Error al loguear',
                 'content': error.args
             }
