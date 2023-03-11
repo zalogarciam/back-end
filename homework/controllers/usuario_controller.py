@@ -65,3 +65,9 @@ class LoginController(Resource):
                 'message': 'Error al loguear',
                 'content': error.args
             }
+        
+class PerfilController(Resource):
+    def get(self):
+         return {
+                'message': 'Hello',
+            }
