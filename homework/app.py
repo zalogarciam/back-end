@@ -1,5 +1,5 @@
 from datetime import timedelta
-from controllers.tarea_controller import TareaController, TareasController
+from controllers.tarea_controller import TareaController, TareasController, UsuarioTareaController
 from flask import Flask
 from flask_migrate import Migrate
 from bd import connection
@@ -25,7 +25,8 @@ api.add_resource(UsuariosController, '/registro')
 api.add_resource(LoginController, '/login')
 api.add_resource(PerfilController, '/perfil')
 api.add_resource(TareasController, '/tareas')
-api.add_resource(TareaController, '/tarea/<id>')
+api.add_resource(UsuarioTareaController, '/tareas/<id>')
+api.add_resource(TareaController, '/tarea')
 
 if __name__ == '__main__':
     app.run(debug=True)
