@@ -10,6 +10,7 @@ class TareasController(Resource):
         user_id = get_jwt_identity()
         data = request.json
         dto = TareaDto()
+        print(data)
         try:
             data_validated = dto.load(data)
             tarea = Tarea(**data_validated, usuarioId = user_id)
@@ -25,3 +26,18 @@ class TareasController(Resource):
             }
     def get(self):
         pass
+
+class TareaController(Resource):
+    def get(self, id):
+        query: Tarea = connection.session.query(Tarea)
+        tareas = query.filter_by(usuarioId = id).all()
+        print(tareas)
+        if len(tareas) == 0:
+            return {
+                'message': "Found 0 tareas for this user"
+            }    
+        dto = TareaDto()
+        result = dto.dump(tareas, many = True)
+        return {
+                'content': result
+        }
