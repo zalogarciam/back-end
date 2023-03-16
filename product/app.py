@@ -4,7 +4,7 @@ from os import environ
 from flask_migrate import Migrate
 from flask_restful import Api
 
-from bd import connection
+from db import connection
 
 
 load_dotenv() 
@@ -19,7 +19,7 @@ flask_api = Api(app=app)
 connection.init_app(app)
 
 
-Migrate(app=app, db=conn)
+Migrate(app=app, db=connection)
 
 if __name__ == '__main__':
     app.run(debug=True)
