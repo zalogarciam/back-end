@@ -23,12 +23,35 @@ class TareasController(Resource):
                 'message': 'Error to create tarea',
                 'content': error.args
             }
-    
+
 class UsuarioTareaController(Resource):
     @jwt_required()
-    def get(self, id):
+    def post(self):
+        user_id = get_jwt_identity()
+        data = request.json
+        dto = TareaDto()
+        print(data)
+        try:
+            data_validated = dto.load(data)
+            tarea = Tarea(**data_validated, usuarioId = user_id)
+            connection.session.add(tarea)
+            connection.session.commit()
+            return {
+                'message': 'Added successfully'
+            }, 201
+        except Exception as error:
+            return {
+                'message': 'Error to create tarea',
+                'content': error.args
+            }
+    @jwt_required()
+    def get(self):
+        # usuario_id = get_jwt_identity()
+        usuario_id = get_jwt_identity()
+        print(usuario_id)
+
         query: Tarea = connection.session.query(Tarea)
-        tareas = query.filter_by(usuarioId = id).all()
+        tareas = query.filter_by(usuarioId = usuario_id).all()
         print(tareas)
         if len(tareas) == 0:
             return {
@@ -41,8 +64,7 @@ class UsuarioTareaController(Resource):
         }
 
 class TareaController(Resource):
-  
-    # @jwt_required()
+    @jwt_required()
     def get(self):
         parser = reqparse.RequestParser()
         parser.add_argument('nombre', type =str)
@@ -62,7 +84,7 @@ class TareaController(Resource):
           tareas = query.filter_by(nombre = args['fecha_vencimiento']).all()
         elif args['estado'] is not  None:
           tareas = query.filter_by(nombre = args['estado']).all()
-          
+
         dto = TareaDto()
         result = dto.dump(tareas, many = True)
 
