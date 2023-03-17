@@ -1,11 +1,12 @@
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from smtplib import SMTP
+from os import environ
 
 def enviar_correo(destinatarios, titulo, cuerpo):
     mensaje = MIMEMultipart()
-    email_emisor = 'gegarciam95@gmail.com'
-    password_email_emisor = 'xiwtoyfueoqmoogd'
+    email_emisor = environ.get('EMAIL_SENDER')
+    password_email_emisor = environ.get('PASSWORD_SENDER')
 
     mensaje['Subject'] = titulo
 
