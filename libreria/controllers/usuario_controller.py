@@ -18,15 +18,16 @@ class RegistroController(Resource):
             data_serialized['password'] = hashed_password
             user = Usuario(**data_serialized)
             connection.session.add(user)
-            connection.session.commit()
 
             enviar_correo(user.correo, 'Bienvenido', '''Bienvenidos a Libreria. aqui encontraras todo lo necesario ''')
+            connection.session.commit()
 
             return {
                 'message': 'Usuario creado',
             }
 
         except Exception as error:
+            connection.session.rollback()
             return {
                 'message': 'Error al registrar usuario',
                 'content': error.args

@@ -32,8 +32,8 @@ def enviar_correo_adjuntos(destinatarios, titulo):
 
     mensaje.attach(MIMEText(cuerpo))
     ruta = path.join(getcwd(), 'utils', 'maxcold.jpeg')
-    with open(ruta, 'rb') as file:
-        print(file)
+    with open(ruta, 'rb') as archivo:
+        print(archivo)
         archivo = MIMEApplication(archivo.read(), Name = 'maxcold.jpeg')
 
     archivo['Content-Disposition'] = 'attachment; filename=maxcold.jpeg'
@@ -47,4 +47,3 @@ def enviar_correo_adjuntos(destinatarios, titulo):
     emisor.sendmail(from_addr= email_emisor, to_addrs= destinatarios, msg=mensaje.as_string())
 
     emisor.quit()
-

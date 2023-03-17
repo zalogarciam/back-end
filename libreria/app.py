@@ -24,6 +24,9 @@ Migrate(app=app, db=connection)
 @app.route('/prueba')
 def enviar_correo_prueba():
     enviar_correo_adjuntos('gegarciam95@gmail.com', 'Correo con imagenes')
+    return {
+        'message': 'Correo enviado exitosamente'
+    }
 
 flask_api.add_resource(RegistroController, '/registro')
 
