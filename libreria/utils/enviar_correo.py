@@ -20,3 +20,15 @@ def enviar_correo(destinatarios, titulo, cuerpo):
     emisor.sendmail(from_addr= email_emisor, to_addrs= destinatarios, msg=mensaje.as_string())
 
     emisor.quit()
+
+def enviar_correo_adjuntos(destinatarios, titulo):
+    cuerpo = 'Por favor, revisar los archivos adjuntos'
+    mensaje = MIMEMultipart()
+    email_emisor = environ.get('EMAIL_SENDER')
+    password_email_emisor = environ.get('PASSWORD_SENDER')
+
+    mensaje['Subject'] = titulo
+
+    mensaje.attach(MIMEText(cuerpo))
+    with open('maxcold.jpeg', 'rb') as file:
+        print(file)
