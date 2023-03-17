@@ -1,4 +1,4 @@
-from controllers.categoria_controller import CategoriasController
+from controllers.imagenes_controller import ImagenesController
 from flask import Flask
 from dotenv import load_dotenv
 from os import environ
@@ -32,7 +32,7 @@ def enviar_correo_prueba():
     }
 
 flask_api.add_resource(RegistroController, '/registro')
-flask_api.add_resource(CategoriasController, '/categorias')
+flask_api.add_resource(ImagenesController, '/imagenes', '/imagenes/<nombre>')
 
 if __name__ == '__main__':
     app.run(debug=True)
