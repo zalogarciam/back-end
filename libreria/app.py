@@ -1,3 +1,4 @@
+from controllers.categoria_controller import CategoriasController
 from flask import Flask
 from dotenv import load_dotenv
 from os import environ
@@ -13,7 +14,9 @@ from controllers.usuario_controller import RegistroController
 load_dotenv() 
 
 app = Flask(__name__)
+
 app.config['SQLALCHEMY_DATABASE_URI'] = environ.get('DATABASE_URL')
+
 flask_api = Api(app=app)
 
 connection.init_app(app)
@@ -29,6 +32,7 @@ def enviar_correo_prueba():
     }
 
 flask_api.add_resource(RegistroController, '/registro')
+flask_api.add_resource(CategoriasController, '/categorias')
 
 if __name__ == '__main__':
     app.run(debug=True)
