@@ -10,7 +10,7 @@ from controllers.categoria_controller import CategoriasController
 
 from utils.enviar_correo import enviar_correo_adjuntos
 from controllers.usuario_controller import RegistroController
-
+from controllers.producto_controller import ProductoController
 
 load_dotenv() 
 
@@ -35,6 +35,7 @@ def enviar_correo_prueba():
 flask_api.add_resource(RegistroController, '/registro')
 flask_api.add_resource(ImagenesController, '/imagenes', '/imagenes/<nombre>')
 flask_api.add_resource(CategoriasController, '/categorias')
+flask_api.add_resource(ProductoController, '/productos')
 
 if __name__ == '__main__':
     app.run(debug=True)

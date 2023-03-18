@@ -2,12 +2,15 @@ from os import path
 from flask_restful import Resource, request
 from db import connection
 from dtos.producto_dto import ProductoDto
+from dtos.categoria_dto import CategoriaDto
+from dtos.producto_dto import MostrarProductoDto
 from models.producto_model import Producto
 
 class ProductoController(Resource):
     def post(self):
-        data = request.form
+        data = request.form.to_dict()
         imagen = request.files.get('imagen')
+        print(imagen.filename)
         data['imagen'] = imagen.filename
         try:
             dto = ProductoDto()
@@ -26,3 +29,11 @@ class ProductoController(Resource):
                 'message': 'Error al crear producto',
                 'content': error.args
             }
+        
+    def get(self):
+        resultado = connection.session.query(Producto).all()
+        dto = MostrarProductoDto()
+        data = dto.dump(resultado, many=True)
+        return {
+            'content': data
+        }
