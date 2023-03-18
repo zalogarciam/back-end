@@ -6,6 +6,7 @@ from flask_migrate import Migrate
 from flask_restful import Api
 
 from db import connection
+from controllers.categoria_controller import CategoriasController
 
 from utils.enviar_correo import enviar_correo_adjuntos
 from controllers.usuario_controller import RegistroController
@@ -33,6 +34,7 @@ def enviar_correo_prueba():
 
 flask_api.add_resource(RegistroController, '/registro')
 flask_api.add_resource(ImagenesController, '/imagenes', '/imagenes/<nombre>')
+flask_api.add_resource(CategoriasController, '/categorias')
 
 if __name__ == '__main__':
     app.run(debug=True)
