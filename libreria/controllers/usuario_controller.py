@@ -25,7 +25,6 @@ class RegistroController(Resource):
             return {
                 'message': 'Usuario creado',
             }
-
         except Exception as error:
             connection.session.rollback()
             return {

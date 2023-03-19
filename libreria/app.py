@@ -17,6 +17,7 @@ load_dotenv()
 app = Flask(__name__)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = environ.get('DATABASE_URL')
+app.config['MAX_CONTENT_LENGTH'] = 10 * 1024 * 1024
 
 flask_api = Api(app=app)
 
@@ -31,6 +32,10 @@ def enviar_correo_prueba():
     return {
         'message': 'Correo enviado exitosamente'
     }
+
+@app.errorhandler(413)
+def request_entity_too_large(error):
+    return 'File Too Large', 413
 
 flask_api.add_resource(RegistroController, '/registro')
 flask_api.add_resource(ImagenesController, '/imagenes', '/imagenes/<nombre>')
